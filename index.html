@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Quantum VR - Explore quantum computing in augmented reality">
+    <title>Quantum VR - AR Quantum Visualization</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <!-- Main App Container -->
+    <div id="app"></div>
+    
+    <!-- AR Button (Always visible) -->
+    <button id="ar-button" class="ar-button">
+        <span class="button-icon">🥽</span>
+        <span class="button-text">Enter AR</span>
+    </button>
+    
+    <!-- XR Status Indicator -->
+    <div id="xr-status" class="xr-status">Checking WebXR support...</div>
+    
+    <!-- Quantum Controls Panel (Hidden until AR starts) -->
+    <div id="controls" class="controls-panel" style="display: none;">
+        <div class="panel-header">
+            <h3>⚛️ Quantum Controls</h3>
+        </div>
+        
+        <!-- State Information -->
+        <div class="state-info">
+            <div class="state-label">State Vector:</div>
+            <div id="state-vector" class="state-value">|ψ⟩ = (1.000)|0⟩ + (0.000)|1⟩</div>
+        </div>
+        
+        <!-- Measurement Probabilities -->
+        <div class="probabilities">
+            <div class="prob-bar">
+                <div class="prob-label">|0⟩</div>
+                <div class="prob-track">
+                    <div id="prob-0" class="prob-fill prob-0" style="width: 100%">100.0%</div>
+                </div>
+            </div>
+            <div class="prob-bar">
+                <div class="prob-label">|1⟩</div>
+                <div class="prob-track">
+                    <div id="prob-1" class="prob-fill prob-1" style="width: 0%">0.0%</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Single Qubit Gates -->
+        <div class="gate-section">
+            <div class="section-title">Pauli Gates</div>
+            <div class="gate-grid">
+                <button id="gate-x" class="gate-btn" data-gate="X" title="Pauli-X (NOT gate)">X</button>
+                <button id="gate-y" class="gate-btn" data-gate="Y" title="Pauli-Y">Y</button>
+                <button id="gate-z" class="gate-btn" data-gate="Z" title="Pauli-Z (Phase flip)">Z</button>
+                <button id="gate-h" class="gate-btn" data-gate="H" title="Hadamard (Superposition)">H</button>
+            </div>
+        </div>
+        
+        <!-- Phase Gates -->
+        <div class="gate-section">
+            <div class="section-title">Phase Gates</div>
+            <div class="gate-grid">
+                <button id="gate-s" class="gate-btn" data-gate="S" title="S gate (π/2 phase)">S</button>
+                <button id="gate-t" class="gate-btn" data-gate="T" title="T gate (π/4 phase)">T</button>
+            </div>
+        </div>
+        
+        <!-- Rotation Gates -->
+        <div class="gate-section">
+            <div class="section-title">Rotation Gates</div>
+            <div class="rotation-control">
+                <label for="rotation-angle">Angle (degrees):</label>
+                <input type="range" id="rotation-angle" min="0" max="360" value="90" step="1">
+                <span id="angle-display">90°</span>
+            </div>
+            <div class="gate-grid">
+                <button id="gate-rx" class="gate-btn" data-gate="RX" title="Rotate around X">RX</button>
+                <button id="gate-ry" class="gate-btn" data-gate="RY" title="Rotate around Y">RY</button>
+                <button id="gate-rz" class="gate-btn" data-gate="RZ" title="Rotate around Z">RZ</button>
+            </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="action-section">
+            <button id="measure-btn" class="action-btn measure-btn" title="Collapse to |0⟩ or |1⟩">
+                📏 Measure
+            </button>
+            <button id="reset-btn" class="action-btn reset-btn" title="Reset to |0⟩">
+                🔄 Reset
+            </button>
+            <button id="place-btn" class="action-btn place-btn" title="Place sphere at current location">
+                📍 Place
+            </button>
+        </div>
+    </div>
+    
+    <!-- Message Display -->
+    <div id="message" class="message" style="display: none;"></div>
+    
+    <!-- Help Overlay (Tap to dismiss) -->
+    <div id="help" class="help-overlay">
+        <div class="help-content">
+            <h2>🌌 Welcome to Quantum VR</h2>
+            <p><strong>How to use:</strong></p>
+            <ol>
+                <li>Tap <strong>"Enter AR"</strong> and grant camera permissions</li>
+                <li>Point your phone at a flat surface (floor, table)</li>
+                <li>Tap the screen or <strong>"Place"</strong> button to place the Bloch sphere</li>
+                <li>Walk around the sphere to see it from different angles</li>
+                <li>Use quantum gate buttons to manipulate the qubit state</li>
+                <li>Watch the purple dot move as the quantum state evolves!</li>
+            </ol>
+            <p class="help-tip">💡 The Bloch sphere visualizes a single qubit. The vertical axis represents |0⟩ (top) and |1⟩ (bottom).</p>
+            <button id="close-help" class="close-help-btn">Got it!</button>
+        </div>
+    </div>
+    
+    <script type="module" src="./src/main.js"></script>
+    
+    <script>
+        // Angle display update
+        document.addEventListener('DOMContentLoaded', () => {
+            const angleInput = document.getElementById('rotation-angle');
+            const angleDisplay = document.getElementById('angle-display');
+            
+            if (angleInput && angleDisplay) {
+                angleInput.addEventListener('input', (e) => {
+                    angleDisplay.textContent = e.target.value + '°';
+                });
+            }
+            
+            // Help overlay
+            const help = document.getElementById('help');
+            const closeHelp = document.getElementById('close-help');
+            
+            if (closeHelp) {
+                closeHelp.addEventListener('click', () => {
+                    help.style.display = 'none';
+                });
+            }
+            
+            // Auto-hide help after visiting once
+            if (localStorage.getItem('quantum-vr-visited')) {
+                help.style.display = 'none';
+            } else {
+                localStorage.setItem('quantum-vr-visited', 'true');
+            }
+        });
+    </script>
+</body>
+</html>
