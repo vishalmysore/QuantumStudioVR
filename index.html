@@ -30,76 +30,79 @@
     <div id="controls" class="controls-panel" style="display: none;">
         <div class="panel-header">
             <h3>⚛️ Quantum Controls</h3>
+            <button id="toggle-controls-btn" class="toggle-btn" title="Minimize Controls">▼</button>
         </div>
         
-        <!-- State Information -->
-        <div class="state-info">
-            <div class="state-label">State Vector:</div>
-            <div id="state-vector" class="state-value">|ψ⟩ = (1.000)|0⟩ + (0.000)|1⟩</div>
-        </div>
-        
-        <!-- Measurement Probabilities -->
-        <div class="probabilities">
-            <div class="prob-bar">
-                <div class="prob-label">|0⟩</div>
-                <div class="prob-track">
-                    <div id="prob-0" class="prob-fill prob-0" style="width: 100%">100.0%</div>
+        <div id="controls-content" class="controls-content">
+            <!-- State Information -->
+            <div class="state-info">
+                <div class="state-label">State Vector:</div>
+                <div id="state-vector" class="state-value">|ψ⟩ = (1.000)|0⟩ + (0.000)|1⟩</div>
+            </div>
+            
+            <!-- Measurement Probabilities -->
+            <div class="probabilities">
+                <div class="prob-bar">
+                    <div class="prob-label">|0⟩</div>
+                    <div class="prob-track">
+                        <div id="prob-0" class="prob-fill prob-0" style="width: 100%">100.0%</div>
+                    </div>
+                </div>
+                <div class="prob-bar">
+                    <div class="prob-label">|1⟩</div>
+                    <div class="prob-track">
+                        <div id="prob-1" class="prob-fill prob-1" style="width: 0%">0.0%</div>
+                    </div>
                 </div>
             </div>
-            <div class="prob-bar">
-                <div class="prob-label">|1⟩</div>
-                <div class="prob-track">
-                    <div id="prob-1" class="prob-fill prob-1" style="width: 0%">0.0%</div>
+            
+            <!-- Single Qubit Gates -->
+            <div class="gate-section">
+                <div class="section-title">Pauli Gates</div>
+                <div class="gate-grid">
+                    <button id="gate-x" class="gate-btn" data-gate="X" title="Pauli-X (NOT gate)">X</button>
+                    <button id="gate-y" class="gate-btn" data-gate="Y" title="Pauli-Y">Y</button>
+                    <button id="gate-z" class="gate-btn" data-gate="Z" title="Pauli-Z (Phase flip)">Z</button>
+                    <button id="gate-h" class="gate-btn" data-gate="H" title="Hadamard (Superposition)">H</button>
                 </div>
             </div>
-        </div>
-        
-        <!-- Single Qubit Gates -->
-        <div class="gate-section">
-            <div class="section-title">Pauli Gates</div>
-            <div class="gate-grid">
-                <button id="gate-x" class="gate-btn" data-gate="X" title="Pauli-X (NOT gate)">X</button>
-                <button id="gate-y" class="gate-btn" data-gate="Y" title="Pauli-Y">Y</button>
-                <button id="gate-z" class="gate-btn" data-gate="Z" title="Pauli-Z (Phase flip)">Z</button>
-                <button id="gate-h" class="gate-btn" data-gate="H" title="Hadamard (Superposition)">H</button>
+            
+            <!-- Phase Gates -->
+            <div class="gate-section">
+                <div class="section-title">Phase Gates</div>
+                <div class="gate-grid">
+                    <button id="gate-s" class="gate-btn" data-gate="S" title="S gate (π/2 phase)">S</button>
+                    <button id="gate-t" class="gate-btn" data-gate="T" title="T gate (π/4 phase)">T</button>
+                </div>
             </div>
-        </div>
-        
-        <!-- Phase Gates -->
-        <div class="gate-section">
-            <div class="section-title">Phase Gates</div>
-            <div class="gate-grid">
-                <button id="gate-s" class="gate-btn" data-gate="S" title="S gate (π/2 phase)">S</button>
-                <button id="gate-t" class="gate-btn" data-gate="T" title="T gate (π/4 phase)">T</button>
+            
+            <!-- Rotation Gates -->
+            <div class="gate-section">
+                <div class="section-title">Rotation Gates</div>
+                <div class="rotation-control">
+                    <label for="rotation-angle">Angle (degrees):</label>
+                    <input type="range" id="rotation-angle" min="0" max="360" value="90" step="1">
+                    <span id="angle-display">90°</span>
+                </div>
+                <div class="gate-grid">
+                    <button id="gate-rx" class="gate-btn" data-gate="RX" title="Rotate around X">RX</button>
+                    <button id="gate-ry" class="gate-btn" data-gate="RY" title="Rotate around Y">RY</button>
+                    <button id="gate-rz" class="gate-btn" data-gate="RZ" title="Rotate around Z">RZ</button>
+                </div>
             </div>
-        </div>
-        
-        <!-- Rotation Gates -->
-        <div class="gate-section">
-            <div class="section-title">Rotation Gates</div>
-            <div class="rotation-control">
-                <label for="rotation-angle">Angle (degrees):</label>
-                <input type="range" id="rotation-angle" min="0" max="360" value="90" step="1">
-                <span id="angle-display">90°</span>
+            
+            <!-- Actions -->
+            <div class="action-section">
+                <button id="measure-btn" class="action-btn measure-btn" title="Collapse to |0⟩ or |1⟩">
+                    📏 Measure
+                </button>
+                <button id="reset-btn" class="action-btn reset-btn" title="Reset to |0⟩">
+                    🔄 Reset
+                </button>
+                <button id="place-btn" class="action-btn place-btn" title="Place sphere at current location">
+                    📍 Place
+                </button>
             </div>
-            <div class="gate-grid">
-                <button id="gate-rx" class="gate-btn" data-gate="RX" title="Rotate around X">RX</button>
-                <button id="gate-ry" class="gate-btn" data-gate="RY" title="Rotate around Y">RY</button>
-                <button id="gate-rz" class="gate-btn" data-gate="RZ" title="Rotate around Z">RZ</button>
-            </div>
-        </div>
-        
-        <!-- Actions -->
-        <div class="action-section">
-            <button id="measure-btn" class="action-btn measure-btn" title="Collapse to |0⟩ or |1⟩">
-                📏 Measure
-            </button>
-            <button id="reset-btn" class="action-btn reset-btn" title="Reset to |0⟩">
-                🔄 Reset
-            </button>
-            <button id="place-btn" class="action-btn place-btn" title="Place sphere at current location">
-                📍 Place
-            </button>
         </div>
     </div>
     

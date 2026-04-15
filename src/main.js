@@ -151,6 +151,15 @@ class QuantumVRApp {
         if (placeBtn) {
             placeBtn.addEventListener('click', () => this.onARSelect());
         }
+        
+        // Minimize controls toggle
+        const toggleBtn = document.getElementById('toggle-controls-btn');
+        const controlsPanel = document.getElementById('controls');
+        if (toggleBtn && controlsPanel) {
+            toggleBtn.addEventListener('click', () => {
+                controlsPanel.classList.toggle('minimized');
+            });
+        }
     }
 
     async toggleAR() {
