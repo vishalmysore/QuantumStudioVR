@@ -25,11 +25,7 @@ class QuantumVRApp {
     }
 
     async init() {
-        // Check XR capabilities first
-        const capabilities = await getXRCapabilities();
-        this.updateXRStatus(capabilities);
-        
-        // Set up Three.js scene
+        // Set up Three.js scene immediately
         this.setupScene();
         this.setupCamera();
         this.setupRenderer();
@@ -38,8 +34,6 @@ class QuantumVRApp {
         // Initialize quantum system
         this.quantumSimulator = new QuantumSimulator();
         this.blochSphere = new BlochSphere3D(0.3);
-        
-        // Don't add to scene yet - will be placed in AR
         
         // Set up XR manager
         this.xrManager = new XRManager(this.renderer, this.scene, this.camera);
@@ -61,6 +55,17 @@ class QuantumVRApp {
         window.addEventListener('resize', () => this.onResize());
         
         console.log('Quantum VR initialized');
+
+        // Check XR capabilities asynchronously with a timeout
+        try {
+            const timeoutPromise = new Promise(resolve => 
+                setTimeout(() => resolve({ supported: false, reason: 'Timeout checking WebXR' }), 2000)
+            );
+            const capabilities = await Promise.race([getXRCapabilities(), timeoutPromise]);
+            this.updateXRStatus(capabilities);
+        } catch (error) {
+            this.updateXRStatus({ supported: false, reason: error.message || 'Error checking WebXR' });
+        }
     }
 
     setupScene() {
