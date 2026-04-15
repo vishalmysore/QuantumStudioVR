@@ -1,6 +1,6 @@
 # 🌌 Quantum VR - Augmented Reality Quantum Visualization
 
-**Quantum VR** brings quantum computing to life through WebXR and augmented reality. Place giant 3D Bloch spheres in your living room and walk around them to explore quantum states, phase differences, and superposition from every angle.
+**Quantum VR** ( Part of Quantum Studio) brings quantum computing to life through WebXR and augmented reality. Place giant 3D Bloch spheres in your living room and walk around them to explore quantum states, phase differences, and superposition from every angle.
 
 ![Quantum VR Experience](https://img.shields.io/badge/WebXR-AR%20%2B%20VR-purple)
 ![Mobile Compatible](https://img.shields.io/badge/Mobile-AR%20Ready-green)
